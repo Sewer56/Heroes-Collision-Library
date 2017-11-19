@@ -1,0 +1,17 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <OutputType>Exe</OutputType>
+    <TargetFramework>netcoreapp2.0</TargetFramework>
+    <Platforms>AnyCPU;x86</Platforms>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <Reference Include="HeroesCollisionLibrary" Condition = "'$(Configuration)'=='Release'">
+      <HintPath>..\..\..\Heroes-Collision-Library\HeroesCollisionLibrary\HeroesCollisionLibrary\bin\Release\netstandard2.0\HeroesCollisionLibrary.dll</HintPath>
+    </Reference>
+    <Reference Include="HeroesCollisionLibrary" Condition = "'$(Configuration)'=='Debug'">
+      <HintPath>..\..\..\Heroes-Collision-Library\HeroesCollisionLibrary\HeroesCollisionLibrary\bin\Debug\netstandard2.0\HeroesCollisionLibrary.dll</HintPath>
+    </Reference>
+  </ItemGroup>
+</Project>

@@ -1,0 +1,10 @@
+D:\Desktop\Heroes-Collision-X\Heroes-Collision-Exporter\HeroesCollisionTool\HeroesCollisionTool\bin\x86\Debug\netcoreapp2.0\HeroesCollisionTool.deps.json
+D:\Desktop\Heroes-Collision-X\Heroes-Collision-Exporter\HeroesCollisionTool\HeroesCollisionTool\bin\x86\Debug\netcoreapp2.0\HeroesCollisionTool.runtimeconfig.json
+D:\Desktop\Heroes-Collision-X\Heroes-Collision-Exporter\HeroesCollisionTool\HeroesCollisionTool\bin\x86\Debug\netcoreapp2.0\HeroesCollisionTool.runtimeconfig.dev.json
+D:\Desktop\Heroes-Collision-X\Heroes-Collision-Exporter\HeroesCollisionTool\HeroesCollisionTool\bin\x86\Debug\netcoreapp2.0\HeroesCollisionTool.dll
+D:\Desktop\Heroes-Collision-X\Heroes-Collision-Exporter\HeroesCollisionTool\HeroesCollisionTool\bin\x86\Debug\netcoreapp2.0\HeroesCollisionTool.pdb
+D:\Desktop\Heroes-Collision-X\Heroes-Collision-Exporter\HeroesCollisionTool\HeroesCollisionTool\obj\x86\Debug\netcoreapp2.0\HeroesCollisionTool.csproj.CoreCompileInputs.cache
+D:\Desktop\Heroes-Collision-X\Heroes-Collision-Exporter\HeroesCollisionTool\HeroesCollisionTool\obj\x86\Debug\netcoreapp2.0\HeroesCollisionTool.AssemblyInfoInputs.cache
+D:\Desktop\Heroes-Collision-X\Heroes-Collision-Exporter\HeroesCollisionTool\HeroesCollisionTool\obj\x86\Debug\netcoreapp2.0\HeroesCollisionTool.AssemblyInfo.cs
+D:\Desktop\Heroes-Collision-X\Heroes-Collision-Exporter\HeroesCollisionTool\HeroesCollisionTool\obj\x86\Debug\netcoreapp2.0\HeroesCollisionTool.dll
+D:\Desktop\Heroes-Collision-X\Heroes-Collision-Exporter\HeroesCollisionTool\HeroesCollisionTool\obj\x86\Debug\netcoreapp2.0\HeroesCollisionTool.pdb

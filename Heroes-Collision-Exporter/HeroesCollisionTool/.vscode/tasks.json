@@ -1,0 +1,65 @@
+{
+    "version": "2.0.0",
+    "tasks": [
+        {
+            "label": "build",
+            "command": "dotnet",
+            "dependsOn": "build HeroesCollisionLibrary",
+            "type": "process",
+            "args": [
+                "build",
+                "${workspaceFolder}/HeroesCollisionTool/HeroesCollisionTool.csproj"
+            ],
+            "problemMatcher": "$msCompile",
+            "group": {
+                "kind": "build",
+                "isDefault": true
+            }
+        },
+        {
+            "label": "build Release",
+            "command": "dotnet",
+            "dependsOn": "build HeroesCollisionLibrary Release",
+            "type": "process",
+            "args": [
+                "build",
+                "${workspaceFolder}/HeroesCollisionTool/HeroesCollisionTool.csproj",
+                "/p:Configuration=Release"
+            ],
+            "problemMatcher": "$msCompile",
+            "group": {
+                "kind": "build",
+                "isDefault": true
+            }
+        },
+        {
+            "label": "build HeroesCollisionLibrary",
+            "command": "dotnet",
+            "type": "process",
+            "args": [
+                "build",
+                "${workspaceFolder}/../../Heroes-Collision-Library/HeroesCollisionLibrary/HeroesCollisionLibrary/HeroesCollisionLibrary.csproj"
+            ],
+            "problemMatcher": "$msCompile",
+            "group": {
+                "kind": "build",
+                "isDefault": true
+            }
+        },
+        {
+            "label": "build HeroesCollisionLibrary Release",
+            "command": "dotnet",
+            "type": "process",
+            "args": [
+                "build",
+                "${workspaceFolder}/../../Heroes-Collision-Library/HeroesCollisionLibrary/HeroesCollisionLibrary/HeroesCollisionLibrary.csproj",
+                "/p:Configuration=Release"
+            ],
+            "problemMatcher": "$msCompile",
+            "group": {
+                "kind": "build",
+                "isDefault": true
+            }
+        }
+    ]
+}

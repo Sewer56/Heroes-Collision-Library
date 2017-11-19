@@ -1,0 +1,50 @@
+{
+   // Use IntelliSense to find out which attributes exist for C# debugging
+   // Use hover for the description of the existing attributes
+   // For further information visit https://github.com/OmniSharp/omnisharp-vscode/blob/master/debugger-launchjson.md
+   "version": "0.2.0",
+   "configurations": [
+        {
+            "name": "[Release] .NET Core Launch (console)",
+            "type": "coreclr",
+            "request": "launch",
+            "preLaunchTask": "build Release",
+            // If you have changed target frameworks, make sure to update the program path.
+            "program": "${workspaceFolder}/HeroesCollisionTool/bin/Release/netcoreapp2.0/HeroesCollisionTool.dll",
+            "args": 
+            [ 
+                "--file", 
+                "D:/Desktop/Heroes-Collision-X/Heroes-Collision-Exporter/HeroesCollisionTool/HeroesCollisionTool/bin/Release/netcoreapp2.0/s01.cl"
+            ],
+            "cwd": "${workspaceFolder}/HeroesCollisionTool",
+            // For more information about the 'console' field, see https://github.com/OmniSharp/omnisharp-vscode/blob/master/debugger-launchjson.md#console-terminal-window
+            "console": "integratedTerminal",
+            "stopAtEntry": false,
+            "internalConsoleOptions": "openOnSessionStart"
+        },
+        {
+            "name": "[Debug] .NET Core Launch (console)",
+            "type": "coreclr",
+            "request": "launch",
+            "preLaunchTask": "build",
+            // If you have changed target frameworks, make sure to update the program path.
+            "program": "${workspaceFolder}/HeroesCollisionTool/bin/Debug/netcoreapp2.0/HeroesCollisionTool.dll",
+            "args": 
+            [ 
+                "--file", 
+                "D:/Desktop/Heroes-Collision-X/Heroes-Collision-Exporter/HeroesCollisionTool/HeroesCollisionTool/bin/Release/netcoreapp2.0/s01.cl"
+            ],
+            "cwd": "${workspaceFolder}/HeroesCollisionTool",
+            // For more information about the 'console' field, see https://github.com/OmniSharp/omnisharp-vscode/blob/master/debugger-launchjson.md#console-terminal-window
+            "console": "integratedTerminal",
+            "stopAtEntry": false,
+            "internalConsoleOptions": "openOnSessionStart"
+        },
+        {
+            "name": ".NET Core Attach",
+            "type": "coreclr",
+            "request": "attach",
+            "processId": "${command:pickProcess}"
+        }
+    ]
+}

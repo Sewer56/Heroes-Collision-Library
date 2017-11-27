@@ -44,6 +44,7 @@ namespace HeroesCollisionTool
                     collisionGenerator.LoadOBJFile();
                     collisionGenerator.GenerateCollision();
                     collisionGenerator.WriteFile();
+                    collisionGenerator.PrintStatistics();
                     break;
                 case 2:
                     collisionExporter.ReadColliison(collisionGenerator.collisionGeneratorProperties.filePath);
@@ -88,6 +89,7 @@ namespace HeroesCollisionTool
                 else if (args[x] == ("--neighboursdisabled")) { collisionGenerator.collisionGeneratorProperties.neighboursEnabled = false; }
                 else if (args[x] == ("--adjacentsdisabled")) { collisionGenerator.collisionGeneratorProperties.adjacentsEnabled = false; }
                 else if (args[x] == ("--useAABB")) { collisionGenerator.collisionGeneratorProperties.useAABB = true; }
+                else if (args[x] == ("--basepower")) { collisionGenerator.collisionGeneratorProperties.basePower = Convert.ToByte(args[x + 1]); }
             }
         }
     }

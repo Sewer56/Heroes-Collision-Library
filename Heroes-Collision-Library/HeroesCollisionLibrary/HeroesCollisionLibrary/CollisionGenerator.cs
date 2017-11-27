@@ -180,6 +180,30 @@ namespace HeroesCollisionLibrary
         }
 
         /// <summary>
+        /// Prints the statistics for the generated collision file.
+        /// </summary>
+        public void PrintStatistics()
+        {
+            float minNodeSize = float.MaxValue;
+            for (int x = 0; x < quadtreeData.nodeBoxes.Length; x++)
+            {
+                if (quadtreeData.nodeBoxes[x].MaxX - quadtreeData.nodeBoxes[x].MinX < minNodeSize) 
+                { 
+                    minNodeSize = quadtreeData.nodeBoxes[x].MaxX - quadtreeData.nodeBoxes[x].MinX; 
+                }
+            }
+
+            int triangleCount = 0;
+            for (int x = 0; x < quadtreeData.quadNodes.Count; x++)
+            {
+                triangleCount += quadtreeData.quadNodes[x].trianglesInNode.Count;
+            }
+
+            Console.WriteLine("Min Node Size: " + minNodeSize);
+            Console.WriteLine("Avg Triangles Per Node: " + ((float)triangleCount / (float)quadtreeData.quadNodes.Count));
+        }
+
+        /// <summary>
         /// Writes the collision file out to a local file.
         /// </summary>
         private void GenerateFile()

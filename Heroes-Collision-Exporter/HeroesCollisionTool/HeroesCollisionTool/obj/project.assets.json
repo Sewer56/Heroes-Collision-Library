@@ -670,11 +670,11 @@
   "project": {
     "version": "1.0.0",
     "restore": {
-      "projectUniqueName": "d:\\Desktop\\Heroes-Collision-X\\Heroes-Collision-Exporter\\HeroesCollisionTool\\HeroesCollisionTool\\HeroesCollisionTool.csproj",
+      "projectUniqueName": "D:\\Desktop\\Github\\HeroesCollisionLibrary\\Heroes-Collision-Exporter\\HeroesCollisionTool\\HeroesCollisionTool\\HeroesCollisionTool.csproj",
       "projectName": "HeroesCollisionTool",
-      "projectPath": "d:\\Desktop\\Heroes-Collision-X\\Heroes-Collision-Exporter\\HeroesCollisionTool\\HeroesCollisionTool\\HeroesCollisionTool.csproj",
+      "projectPath": "D:\\Desktop\\Github\\HeroesCollisionLibrary\\Heroes-Collision-Exporter\\HeroesCollisionTool\\HeroesCollisionTool\\HeroesCollisionTool.csproj",
       "packagesPath": "C:\\Users\\sewer56lol\\.nuget\\packages\\",
-      "outputPath": "d:\\Desktop\\Heroes-Collision-X\\Heroes-Collision-Exporter\\HeroesCollisionTool\\HeroesCollisionTool\\obj\\",
+      "outputPath": "D:\\Desktop\\Github\\HeroesCollisionLibrary\\Heroes-Collision-Exporter\\HeroesCollisionTool\\HeroesCollisionTool\\obj\\",
       "projectStyle": "PackageReference",
       "fallbackFolders": [
         "C:\\Program Files\\dotnet\\sdk\\NuGetFallbackFolder"
@@ -706,7 +706,7 @@
         "dependencies": {
           "Microsoft.NETCore.App": {
             "target": "Package",
-            "version": "2.0.0",
+            "version": "[2.0.0, )",
             "autoReferenced": true
           }
         },

@@ -96,14 +96,14 @@ namespace HeroesCollisionLibrary
             if ((maximumXYZ.X - minimumXYZ.X) > (maximumXYZ.Z - minimumXYZ.Z))  
             { 
                 // If true, X axis difference is the size.
-                //quadtreeSize = maximumXYZ.X - minimumXYZ.X;  
-                quadtreeSize = (int)(((int)(maximumXYZ.X - minimumXYZ.X) / basePower) * basePower);  
+                quadtreeSize = maximumXYZ.X - minimumXYZ.X;  
+                //quadtreeSize = (int)(((int)(maximumXYZ.X - minimumXYZ.X) / basePower) * basePower);  
             }
             else 
             { 
                 // If false, Z axis difference is the size.
-                //quadtreeSize = maximumXYZ.Z - minimumXYZ.Z;  
-                quadtreeSize = (int)(((int)(maximumXYZ.Z - minimumXYZ.Z) / basePower) * basePower);  
+                quadtreeSize = maximumXYZ.Z - minimumXYZ.Z;  
+                //quadtreeSize = (int)(((int)(maximumXYZ.Z - minimumXYZ.Z) / basePower) * basePower);  
             }
         }
     }

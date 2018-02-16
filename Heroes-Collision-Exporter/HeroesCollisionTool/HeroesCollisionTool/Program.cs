@@ -33,8 +33,8 @@ namespace HeroesCollisionTool
             // Check if it is a CL or OBJ File for Exporting/Importing
             if (collisionGenerator.collisionGeneratorProperties.filePath != null)
             {
-                if (collisionGenerator.collisionGeneratorProperties.filePath.EndsWith(".obj")) { action = 1; }
-                else { action = 2; }
+                if (collisionGenerator.collisionGeneratorProperties.filePath.EndsWith(".cl")) { action = 2; }
+                else if (collisionGenerator.collisionGeneratorProperties.filePath.EndsWith(".obj")) { action = 1; }
             }
 
             // Switch all of the available action states..

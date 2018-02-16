@@ -259,11 +259,8 @@ namespace HeroesCollisionLibrary
 
                 // Write the vertex normals to the file
                 CLFile.AddRange(BitConverter.GetBytes(geometryData.triangleNormals[x].X).Reverse());
-                CLFile.AddRange(BitConverter.GetBytes(- (float)geometryData.triangleNormals[x].Y).Reverse()); 
+                CLFile.AddRange(BitConverter.GetBytes((float)geometryData.triangleNormals[x].Y).Reverse()); 
                 CLFile.AddRange(BitConverter.GetBytes((float)geometryData.triangleNormals[x].Z).Reverse());
-
-                // NOTE: SONIC HEROES INVERTS THE NORMALS IN THE Y AXIS!!
-                // TODO: SONIC HEROES INVERTS THE NORMALS IN THE Y AXIS!!
 
                 // Add dummies for collision flags.
                 CLFile.AddRange(BitConverter.GetBytes(geometryData.triangleArray[x].triangleFlagsI));

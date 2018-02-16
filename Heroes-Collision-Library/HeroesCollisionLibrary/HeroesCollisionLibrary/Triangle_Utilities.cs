@@ -65,9 +65,9 @@ namespace HeroesCollisionLibrary
             /// | 1, 2, 3 | - vertexOne
             /// [ 4, 5, 6 ] - vertexTwo
             
-            crossProduct.X = (vertex1.Y * vertex2.Z) - (vertex1.Z * vertex2.Y);  // [2(6) - 3(5)]i
-            crossProduct.Y = (vertex1.X * vertex2.Z) - (vertex1.Z * vertex2.X);  // [1(6) - 3(4)]j
-            crossProduct.Z = (vertex1.X * vertex2.Y) - (vertex1.Y * vertex2.X);  // [1(5) - 2(4)]k
+            crossProduct.X = (vertex1.Y * vertex2.Z) - (vertex1.Z * vertex2.Y);     //  [2(6) - 3(5)]i
+            crossProduct.Y = -((vertex1.X * vertex2.Z) - (vertex1.Z * vertex2.X));  // -[1(6) - 3(4)]j
+            crossProduct.Z = (vertex1.X * vertex2.Y) - (vertex1.Y * vertex2.X);     //  [1(5) - 2(4)]k
 
             // Return the vector average3
             return crossProduct;

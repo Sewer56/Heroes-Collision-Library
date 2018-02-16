@@ -1,9 +1,0 @@
-D:\Desktop\Heroes-Collision-X\Heroes-Collision-Library\HeroesCollisionLibrary\HeroesCollisionLibrary\bin\x86\Release\netstandard2.0\HeroesCollisionLibrary.deps.json
-D:\Desktop\Heroes-Collision-X\Heroes-Collision-Library\HeroesCollisionLibrary\HeroesCollisionLibrary\bin\x86\Release\netstandard2.0\HeroesCollisionLibrary.dll
-D:\Desktop\Heroes-Collision-X\Heroes-Collision-Library\HeroesCollisionLibrary\HeroesCollisionLibrary\bin\x86\Release\netstandard2.0\HeroesCollisionLibrary.pdb
-D:\Desktop\Heroes-Collision-X\Heroes-Collision-Library\HeroesCollisionLibrary\HeroesCollisionLibrary\obj\x86\Release\netstandard2.0\HeroesCollisionLibrary.csprojResolveAssemblyReference.cache
-D:\Desktop\Heroes-Collision-X\Heroes-Collision-Library\HeroesCollisionLibrary\HeroesCollisionLibrary\obj\x86\Release\netstandard2.0\HeroesCollisionLibrary.csproj.CoreCompileInputs.cache
-D:\Desktop\Heroes-Collision-X\Heroes-Collision-Library\HeroesCollisionLibrary\HeroesCollisionLibrary\obj\x86\Release\netstandard2.0\HeroesCollisionLibrary.AssemblyInfoInputs.cache
-D:\Desktop\Heroes-Collision-X\Heroes-Collision-Library\HeroesCollisionLibrary\HeroesCollisionLibrary\obj\x86\Release\netstandard2.0\HeroesCollisionLibrary.AssemblyInfo.cs
-D:\Desktop\Heroes-Collision-X\Heroes-Collision-Library\HeroesCollisionLibrary\HeroesCollisionLibrary\obj\x86\Release\netstandard2.0\HeroesCollisionLibrary.dll
-D:\Desktop\Heroes-Collision-X\Heroes-Collision-Library\HeroesCollisionLibrary\HeroesCollisionLibrary\obj\x86\Release\netstandard2.0\HeroesCollisionLibrary.pdb

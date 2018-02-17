@@ -117,7 +117,7 @@ namespace HeroesCollisionLibrary
                 Geometry_Properties.Vertex minXYZ = new Geometry_Properties.Vertex(triangleVertices[0].X,triangleVertices[0].Y,triangleVertices[0].Z);
 
                 // Iterate over all of the vertices to find the maximum and/or minimum values for the vertices.
-                for (int z = 0; z < triangleVertices.Length; z++)
+                for (int z = 1; z < triangleVertices.Length; z++)
                 {
                     if (triangleVertices[z].X > maxXYZ.X) { maxXYZ.X = triangleVertices[z].X; }
                     if (triangleVertices[z].Z > maxXYZ.Z) { maxXYZ.Z = triangleVertices[z].Z; }

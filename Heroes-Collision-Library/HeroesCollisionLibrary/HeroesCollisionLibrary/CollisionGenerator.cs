@@ -718,12 +718,19 @@ namespace HeroesCollisionLibrary
             return true; // boxes overlap
         }
 
+        /// <summary>
+        /// Accurately checks node-triangle collisions, down to the individual vertices.
+        /// </summary>
+        /// <param name="triangle">The triangle to check passed in node collision against.</param>
+        /// <param name="nodeRectangle">The bounding box square representing the current node.</param>
+        /// <returns>True if there is an intersection, otherwise false.</returns>
         private bool CheckCollisionAccurate (Geometry_Properties.Triangle triangle, Quadtree_Properties.NodeRectangle nodeRectangle)
         {
             // First check if the bounding boxes intersect, if they don't, discard the operation.
             if (! BoundingBoxIntersect(nodeRectangle, geometryData.triangleBoxes[triangle.triangleIndex])) { return false; }
 
             // Check all vertices for presence in rectangle for possible fast return.
+            // If any of the vertices is inside the node, then there must be a collision.
             if (IsVertexInRectangle(geometryData.verticesArray[triangle.vertexOne], nodeRectangle)) { return true; }
             if (IsVertexInRectangle(geometryData.verticesArray[triangle.vertexTwo], nodeRectangle)) { return true; }
             if (IsVertexInRectangle(geometryData.verticesArray[triangle.vertexThree], nodeRectangle)) { return true; }
@@ -740,7 +747,10 @@ namespace HeroesCollisionLibrary
             Geometry_Properties.Vertex triangleVertexThree = geometryData.verticesArray[triangle.vertexThree];
 
             // Then check if any of the node line segments intersect the triangle line segments.
-
+            // We basically check if there are intersections between any of the three line segments of the triangle
+            // i.e. A=>B, B=>C and C=>A and the four edges of the rectangle.
+            #region Line Intersection Tests: Triangle line segments (vertex X to vertex Y) against node up down left right edges.
+            
             // Check the top edge of the against the triangle line segments.
             if ( LineIntersectionTest(triangleVertexOne, triangleVertexTwo, topLeftNodeEdge, topRightNodeEdge) ) { return true; }
             if ( LineIntersectionTest(triangleVertexTwo, triangleVertexThree, topLeftNodeEdge, topRightNodeEdge) ) { return true; }
@@ -760,6 +770,51 @@ namespace HeroesCollisionLibrary
             if ( LineIntersectionTest(triangleVertexOne, triangleVertexTwo, topRightNodeEdge, bottomRightNodeEdge) ) { return true; }
             if ( LineIntersectionTest(triangleVertexTwo, triangleVertexThree, topRightNodeEdge, bottomRightNodeEdge) ) { return true; }
             if ( LineIntersectionTest(triangleVertexThree, triangleVertexOne, topRightNodeEdge, bottomRightNodeEdge) ) { return true; }
+
+            #endregion Line Intersection Tests: Triangle line segments (vertex X to vertex Y) against node up down left right edges.
+
+            // Understanding the code below:
+            // Consider the triangle as three vectors, in a fixed rotation order A=>B, B=>C, C=>A
+            // Now consider each vertex of the triangle and each square vertex, compute the cross product between each triangle edge and rectangle
+            // vector (3*4=12 comparisons in total). If all of the cross products are of the same sign, or zero, the triangle is inside.
+
+            // Conceptually we are determining whether the vertices are on the left or right side of the line, albeit the side is not cared.
+            // We do not care whether it is left or right specifically, or whether it is in clockwise or anticlockwise order, only that all of the vertices
+            // of the square are on the same side of the lines.
+            // i.e. if all of the vertices are on the same side of each line, the vertices are "trapped" between the 3 lines, meaning that they must be
+            // inside the triangle.
+            #region Node Inside Triangle Tests: Determine if all of the node vertices are on the right side of the line, with vertices going clockwise.
+            
+            // Vertex One   = A
+            // Vertex Two   = B
+            // Vertex Three = C
+            // Note: Variable names are completely arbitrary, to make code less confusing/long
+
+            // Compare line A=>B with all edge vertices.
+            bool v1 = IsPointRightOfLine(triangleVertexOne, triangleVertexTwo, topLeftNodeEdge);
+            bool v2 = IsPointRightOfLine(triangleVertexOne, triangleVertexTwo, topRightNodeEdge);
+            bool v3 = IsPointRightOfLine(triangleVertexOne, triangleVertexTwo, bottomRightNodeEdge);
+            bool v4 = IsPointRightOfLine(triangleVertexOne, triangleVertexTwo, bottomLeftNodeEdge);
+
+            // Compare line B=>C with all edge vertices.
+            bool v5 = IsPointRightOfLine(triangleVertexTwo, triangleVertexThree, topLeftNodeEdge);
+            bool v6 = IsPointRightOfLine(triangleVertexTwo, triangleVertexThree, topRightNodeEdge);
+            bool v7 = IsPointRightOfLine(triangleVertexTwo, triangleVertexThree, bottomRightNodeEdge);
+            bool v8 = IsPointRightOfLine(triangleVertexTwo, triangleVertexThree, bottomLeftNodeEdge);
+
+            // Compare line C=>A with all edge vertices.
+            bool v9  = IsPointRightOfLine(triangleVertexThree, triangleVertexOne, topLeftNodeEdge);
+            bool v10 = IsPointRightOfLine(triangleVertexThree, triangleVertexOne, topRightNodeEdge);
+            bool v11 = IsPointRightOfLine(triangleVertexThree, triangleVertexOne, bottomRightNodeEdge);
+            bool v12 = IsPointRightOfLine(triangleVertexThree, triangleVertexOne, bottomLeftNodeEdge);
+
+            // Check whether the node is inside the triangle.
+            if (v1.AllEqual(v2, v3, v4, v5, v6, v7, v8, v9, v10, v11, v12)) 
+            { 
+                return true; 
+            }
+
+            #endregion Node Inside Triangle Tests: Determine if all of the node vertices are on the right side of the line, with vertices going clockwise.
 
             // Else return false;
             return false;
@@ -860,13 +915,16 @@ namespace HeroesCollisionLibrary
         private bool IsPointOnLine(Geometry_Properties.Vertex lineVertex1, Geometry_Properties.Vertex lineVertex2, Geometry_Properties.Vertex targetVertex) 
         {
             // Move the line defined by lineVertex1, lineVertex2 such that the vertex defines the vector of a line that crosses the point 0,0.
-            Geometry_Properties.Vertex tempVertex = new Geometry_Properties.Vertex(lineVertex2.X - lineVertex1.X, 0, lineVertex2.Z - lineVertex1.Z);
+            // More specifically: Move the end vertex to a location that is an offset of target vertex - source vertex. i.e. make it a vector relative to 0,0
+            Geometry_Properties.Vertex tempVector = new Geometry_Properties.Vertex(lineVertex2.X - lineVertex1.X, 0, lineVertex2.Z - lineVertex1.Z);
 
             // Move the point we are comparing defined by targetVertex such that it is an offset/vector from 0,0 (another line)
+            // Our assumption is that linevertex1 (original start point of first line segment) is located at 0,0 , and we want to define everything
+            // relative to that specific point, thus both offsetting the end of the line segment and our target vertex.
             Geometry_Properties.Vertex tempPoint = new Geometry_Properties.Vertex(targetVertex.X - lineVertex1.X, 0, targetVertex.Z - lineVertex1.Z);
 
             // Obtain the Cross Product, if it is very close, within a certain range then the point is on the line.
-            double crossProduct = CrossProduct(tempVertex, tempPoint);
+            double crossProduct = CrossProduct(tempVector, tempPoint);
 
             // Extremely small margin of error.
             return Math.Abs(crossProduct) < 0.000001;
@@ -881,13 +939,16 @@ namespace HeroesCollisionLibrary
         private bool IsPointRightOfLine(Geometry_Properties.Vertex lineVertex1, Geometry_Properties.Vertex lineVertex2, Geometry_Properties.Vertex targetVertex) 
         {
             // Move the line defined by lineVertex1, lineVertex2 such that the vertex defines the vector of a line that crosses the point 0,0.
-            Geometry_Properties.Vertex tempVertex = new Geometry_Properties.Vertex(lineVertex2.X - lineVertex1.X, 0, lineVertex2.Z - lineVertex1.Z);
+            // More specifically: Move the end vertex to a location that is an offset of target vertex - source vertex. i.e. make it a vector relative to 0,0
+            Geometry_Properties.Vertex tempVector = new Geometry_Properties.Vertex(lineVertex2.X - lineVertex1.X, 0, lineVertex2.Z - lineVertex1.Z);
 
             // Move the point we are comparing defined by targetVertex such that it is an offset/vector from 0,0 (another line)
+            // Our assumption is that linevertex1 (original start point of first line segment) is located at 0,0 , and we want to define everything
+            // relative to that specific point, thus both offsetting the end of the line segment and our target vertex.
             Geometry_Properties.Vertex tempPoint = new Geometry_Properties.Vertex(targetVertex.X - lineVertex1.X, 0, targetVertex.Z - lineVertex1.Z);
 
             // Obtain the Cross Product, if it is very close, within a certain range then the point is on the line.
-            double crossProduct = CrossProduct(tempVertex, tempPoint);
+            double crossProduct = CrossProduct(tempVector, tempPoint);
 
             // Extremely small margin of error.
             return crossProduct < 0;

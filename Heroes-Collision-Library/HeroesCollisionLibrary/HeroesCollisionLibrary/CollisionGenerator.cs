@@ -350,10 +350,10 @@ namespace HeroesCollisionLibrary
                 // Append the horizontal and vertical quadnode offset as well as the depth level.
                 CLFile.AddRange(BitConverter.GetBytes((ushort)quadtreeData.quadNodes[x].positioningHorizontalOffset).Reverse());
                 CLFile.AddRange(BitConverter.GetBytes((ushort)quadtreeData.quadNodes[x].positioningVerticalOffset).Reverse());
-                CLFile.AddRange(BitConverter.GetBytes(Convert.ToInt16(quadtreeData.quadNodes[x].depthLevel)));
+                CLFile.AddRange((byte)(quadtreeData.quadNodes[x].depthLevel));
 
                 // Dummy bytes that are not used in the original struct.
-                CLFile.AddRange(new byte[] {0x00, 0x00, 0x00, 0x00, 0x00, 0x00} );
+                CLFile.AddRange(new byte[] {0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00} );
             }
         }
 

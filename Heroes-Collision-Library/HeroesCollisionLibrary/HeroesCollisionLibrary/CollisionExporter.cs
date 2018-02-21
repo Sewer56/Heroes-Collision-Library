@@ -115,8 +115,7 @@ namespace HeroesCollisionLibrary
         /// <summary>
         /// Retrieves the OBJ collision file out to external storage..
         /// </summary>
-        /// <param name="filePath"></param>
-        public List<string> GetCollision(string filePath)
+        public List<string> GetCollision()
         {
             return _objFile;
         }

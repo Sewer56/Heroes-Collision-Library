@@ -1,6 +1,6 @@
 # Heroes Collision Library
 
-Heroes Collision Library is self explanatory, it is library for the manipulation of Sonic Heroes' collision files written in .NET Core 2.0, offering fast collision generation speeds while being (at the time of writing), the only library offering accurate collision checking.
+Heroes Collision Library is self explanatory, it is library for the manipulation of Sonic Heroes' collision files written in .NET Standard 2.0, offering fast collision generation speeds while being (at the time of writing), the only library offering accurate collision checking.
 
 Provided with the library is also a simple importer/exporer, HeroesCollisionTool, which can be used for the exporting and importing of collision files.
 
@@ -8,7 +8,11 @@ Provided with the library is also a simple importer/exporer, HeroesCollisionTool
 
 Note: HeroesCollisionTool is a simple example application, it can be run with `dotnet HeroesCollisionTool.dll` in the command line.
 
-First you need to set the instantiate and set up properties for the collision generator.
+This project is a library built with .NET Standard 2.0, thus it can be included in all .NET Framework, .NET Core, and Xamarin projects. 
+
+It may be either added via right clicking "Dependencies" (or References) and adding the individual library as a reference or copying over the code from HeroesCollisionLibrary into your project.
+
+If you would want to manually compile the project, open up the Visual Studio solution inside the Heroes-Collision-Library directory (for HeroesCollisionTool you will also be required to change the path to the HeroesCollisionLibrary DLL dependency). There are also configurations for VSCode from earlier stages of development should that be your preferred choice of editor.
 
 ## Instantiation
 ```csharp
@@ -92,3 +96,11 @@ collisionExporter.ReadColliison(filePath);
 collisionExporter.WriteCollision(filePath + ".obj");
 collisionExporter.GetCollision();
 ```
+
+### Reminder
+
+You should always playtest the collision in your level before publishing the stage, by walking the entirety of the level contents.
+
+It is not recommended to export collision files with depths ("nodelevel") greater than 7. The reason is that random locations within levels still crash on every custom files from every single collision exporter, inclusive of this one. Despite going great depths in searching, the reason after even half a year remains unknown.
+
+If you find a spot where the game randomly crashes, consider manually playing around with the depth level (typically you simply need to unfortunately set it lower).

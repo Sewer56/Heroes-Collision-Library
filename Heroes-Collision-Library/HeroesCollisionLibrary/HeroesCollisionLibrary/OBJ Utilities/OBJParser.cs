@@ -1,4 +1,6 @@
 ﻿// Standard Library Imports.
+using HeroesCollisionLibrary.Geometry;
+using HeroesCollisionLibrary.Geometry.Structures;
 using System;
 using System.Collections.Generic;
 using System.IO;
@@ -9,80 +11,56 @@ namespace HeroesCollisionLibrary
     /// <summary>
     /// Provides useful utilities used for working with Wavefront .obj files for the collision exporter/generator.
     /// </summary>
-    public class OBJ_Utilities
+    public class ObjParser
     {
-        /// <summary>
-        /// Stores all of the necessary properties which define this .OBJ File
-        /// </summary>
-        private Geometry_Properties objFile;
-
         /// <summary>
         /// Stores the contents of the Wavefront OBJ File.
         /// </summary>
-        private string[] objFileString;
+        private string[] _objFileString;
 
         /// <summary>
-        /// Defines the triangle array element which is currently being added (optimization).
+        /// Defines the triangle array element which is currently being added.
         /// </summary>
-        private int triangleIndex = -1;
+        private int _triangleIndex = -1;
 
         /// <summary>
-        /// Defines the vertex array element which is currently being added (optimization).
+        /// Defines the vertex array element which is currently being added.
         /// </summary>
-        private int vertexIndex = -1;
+        private int _vertexIndex = -1;
 
         /// <summary>
         /// Match object for storing the results of each regex capture groups.
         /// </summary>
-        Match regexMatch;
+        private Match _regexMatch;
 
         /// <summary>
         /// [Constructor] Initializes the class.
         /// </summary>
-        public OBJ_Utilities(string objFilePath)
+        public ObjParser(string objFilePath)
         {
-            // Initialize OBJ File
-            objFile = new Geometry_Properties();
-
             // Load Actual OBJ File
-            objFileString = File.ReadAllLines(objFilePath);
+            _objFileString = File.ReadAllLines(objFilePath);
         }
-
-        /// <summary>
-        /// Retrieves the vertices of the loaded .OBJ File.
-        /// </summary>
-        public Geometry_Properties.Vertex[] GetVertices(){ return objFile.verticesArray; }
-
-        /// <summary>
-        /// Retrieves the triangles of the loaded .OBJ File.
-        /// </summary>
-        public Geometry_Properties.Triangle[] GetTriangles(){ return objFile.triangleArray; }
-
-        /// <summary>
-        /// Retrieves the complete collision file details.
-        /// </summary>
-        public Geometry_Properties GetCollisionFile(){ return objFile; }
 
         /// <summary>
         /// Returns the complete version of the OBJ File with the necessary information to generate collision.
         /// After running, use GetCollisionFile to retrieve the information. (or GetVertices/GetTriangles)
         /// </summary>
-        public void CalculateCollisionFile()
+        public void ReadObjFile()
         {
             // Calculate the vertices and triangles and return each of them.
-            CalculateVertices();
-            CalculateTriangles();
+            ReadVertices();
+            ReadTriangles();
         }
 
         /// <summary>
         /// Works out all of the vertices from the Wavefront OBJ File.
         /// After running, use GetVertices to retrieve the information. 
         /// </summary>
-        public void CalculateVertices()
+        private void ReadVertices()
         {
             // Assigns Memory for Storing Vertex Data.
-            objFile.verticesArray = new Geometry_Properties.Vertex[UInt16.MaxValue]; // Maximum amount in a Heroes Collision File.
-            vertexIndex = -1;
+            _vertexIndex = -1;
 
             // Compile Regular Expressions for stripping spaces and definitions from faces and vertices.
             // Intended data goes into the first capture group.
@@ -94,45 +72,41 @@ namespace HeroesCollisionLibrary
             try 
             {
                 // Parse the file line by line.
-                foreach (String line in objFileString)
+                foreach (String line in _objFileString)
                 {
-                    // Skip Comments
-                    if (line.StartsWith("#")) { continue; }
                     // If the line defines a vertex.
-                    else if (line.StartsWith("v")) 
+                    if (line.StartsWith("v")) 
                     {
                         // Get Regular Expression Matches.
-                        regexMatch = vertexRegex.Match(line);
+                        _regexMatch = vertexRegex.Match(line);
 
                         // Group 0 contains entire matched expression, we only want first group.
-                        string vertexCoordinates = regexMatch.Groups[1].Value;
+                        string vertexCoordinates = _regexMatch.Groups[1].Value;
 
                         // Add vertex onto vertex list.
                         AddVertex(vertexCoordinates);
-
-                        // Continue onto Next Iteration
-                        continue;
                     }
                 }
             } 
             catch 
             { 
-                "YOUR COLLISION MODEL IS TOO COMPLEX, REDUCE THE AMOUNT OF VERTICES | MAX 65535".PrintWarningMessage(); 
+                "ERROR READING OBJ FILE VERTICES".PrintWarningMessage(); 
             }
 
-            // Trim the vertices down.
-            TrimVertices();
+
+            // Inform user of breeaking limits.
+            if (_vertexIndex > 65535) { "YOUR COLLISION MODEL IS TOO COMPLEX FOR THE GAME, ENSURE YOUR MODEL HAS MAXIMUM 65535 VERTICES".PrintWarningMessage(); }
         }
 
         /// <summary>
         /// Works out all of the triangles' vertices from the Wavefront OBJ File.
         /// After running, use GetTriangles to retrieve the information. 
         /// </summary>
-        public void CalculateTriangles()
+        private void ReadTriangles()
         {
             // Assigns memory for Storing Triangle Data
-            objFile.triangleArray = new Geometry_Properties.Triangle[UInt16.MaxValue]; // Maximum amount in a Heroes Collision File.
-            triangleIndex = -1;
+            GeometryData.Triangles = new List<HeroesTriangle>(UInt16.MaxValue); // Maximum amount in a Heroes Collision File.
+            _triangleIndex = -1;
 
             // Compile Regular Expressions for stripping spaces and definitions from faces and vertices.
             // Intended data goes into the first capture group.
@@ -144,35 +118,29 @@ namespace HeroesCollisionLibrary
             try
             {
                 // Parse the file line by line.
-                foreach (String line in objFileString)
+                foreach (String line in _objFileString)
                 {
-                    // Skip Comments
-                    if (line.StartsWith("#")) { continue; }
-
                     // If the line defines a face.
-                    else if (line.StartsWith("f"))
+                    if (line.StartsWith("f"))
                     {
                         // Get Regular Expression Matches.
-                        regexMatch = faceRegex.Match(line);
+                        _regexMatch = faceRegex.Match(line);
 
                         // Group 0 contains entire matched expression, we only want first group.
-                        string faceCoordinates = regexMatch.Groups[1].Value;
+                        string faceCoordinates = _regexMatch.Groups[1].Value;
 
                         // Work out triangle faces.
                         AddTriangle(faceCoordinates);
-
-                        // Continue onto Next Iteration
-                        continue;
                     }
                 }
             } 
             catch 
             { 
-                "YOUR COLLISION MODEL IS TOO COMPLEX, REDUCE THE AMOUNT OF TRIANGLES | MAX 65535".PrintWarningMessage(); 
+                "ERROR READING OBJ FILE FACES".PrintWarningMessage(); 
             }
 
-            // Trim the triangles array down.
-            TrimTriangles();
+            // Inform user of breeaking limits.
+            if (_triangleIndex > 65535) { "YOUR COLLISION MODEL IS TOO COMPLEX FOR THE GAME, ENSURE YOUR MODEL HAS MAXIMUM 65535 FACES".PrintWarningMessage(); }
         }
 
         /// <summary>
@@ -184,17 +152,17 @@ namespace HeroesCollisionLibrary
             string[] verticesString = vertexCoordinates.Split(' ');
 
             // Increment array index. (Pre-decrement, value starts at -1)
-            vertexIndex += 1;
+            _vertexIndex += 1;
 
             // Declare and assign the individual XYZ Positions
-            Geometry_Properties.Vertex vertices = new Geometry_Properties.Vertex();
+            Vertex vertices = new Vertex();
 
             vertices.X = Convert.ToSingle(verticesString[0]);
             vertices.Y = Convert.ToSingle(verticesString[1]);
             vertices.Z = Convert.ToSingle(verticesString[2]);
 
             // Add onto the vertices array.
-            objFile.verticesArray[vertexIndex] = vertices;
+            GeometryData.Vertices.Add(vertices);
         }
 
         /// <summary>
@@ -206,7 +174,7 @@ namespace HeroesCollisionLibrary
             string[] trianglesString = triangleVertices.Split(' ');
 
             // Increment array index. (Pre-decrement, value starts at -1)
-            triangleIndex += 1;
+            _triangleIndex += 1;
 
             // Check if it's face vertex index value only, if it contains texture coordinates or normals, strip them from the string.
             for (int x = 0; x < trianglesString.Length; x++) 
@@ -218,7 +186,7 @@ namespace HeroesCollisionLibrary
             }
 
             // Declare and assign the individual triangle vertices
-            Geometry_Properties.Triangle triangle = new Geometry_Properties.Triangle();
+            HeroesTriangle triangle = new HeroesTriangle();
 
             // Stores the individual vertex information.
             ushort vertexOne;
@@ -232,26 +200,16 @@ namespace HeroesCollisionLibrary
             try { vertexThree = (ushort)(Convert.ToUInt16(trianglesString[2]) - 1); } catch {vertexThree = 1;}
 
             // Assign our vertices to the triangle.
-            triangle.vertexOne = vertexOne;
-            triangle.vertexTwo = vertexTwo;
-            triangle.vertexThree = vertexThree;
+            triangle.VertexOne = vertexOne;
+            triangle.VertexTwo = vertexTwo;
+            triangle.VertexThree = vertexThree;
 
             // Assign no collision flags
-            triangle.triangleFlagsI = 0;
-            triangle.triangleFlagsII = 0;
+            triangle.FlagsPrimary = new byte[]{ 0x00, 0x00, 0x00, 0x00 };
+            triangle.FlagsSecondary = new byte[] { 0x00, 0x00, 0x00, 0x00 };
 
             // Add onto triangles array
-            objFile.triangleArray[triangleIndex] = triangle;
+            GeometryData.Triangles.Add(triangle);
         }
-
-        /// <summary>
-        /// Trims the triangle array down to the necessary amount of array elements.
-        /// </summary>
-        private void TrimTriangles() { objFile.triangleArray = objFile.triangleArray.SubArray(0, triangleIndex + 1); }       
-
-        /// <summary>
-        /// Trims the vertex array down to the necessary amount of array elements.
-        /// </summary>
-        private void TrimVertices() { objFile.verticesArray = objFile.verticesArray.SubArray(0, vertexIndex + 1); } 
     }
 }

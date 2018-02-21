@@ -15,7 +15,11 @@
             "args": 
             [ 
                 "--file", 
-                "D:/Desktop/Github/HeroesCollisionLibrary/Heroes-Collision-Exporter/HeroesCollisionTool/HeroesCollisionTool/bin/Debug/netcoreapp2.0/s01.cl"
+                "D:/Desktop/Github/HeroesCollisionLibrary/Heroes-Collision-Exporter/HeroesCollisionTool/HeroesCollisionTool/bin/Debug/netcoreapp2.0/s01.cl.obj",
+                "--nodelevel",
+                "7",
+                "--nodescale",
+                "1"
             ],
             "cwd": "${workspaceFolder}/HeroesCollisionTool",
             // For more information about the 'console' field, see https://github.com/OmniSharp/omnisharp-vscode/blob/master/debugger-launchjson.md#console-terminal-window
@@ -33,7 +37,11 @@
             "args": 
             [ 
                 "--file", 
-                "D:/Desktop/Github/HeroesCollisionLibrary/Heroes-Collision-Exporter/HeroesCollisionTool/HeroesCollisionTool/bin/Debug/netcoreapp2.0/s01.cl"
+                "D:/Desktop/Github/HeroesCollisionLibrary/Heroes-Collision-Exporter/HeroesCollisionTool/HeroesCollisionTool/bin/Debug/netcoreapp2.0/s01.cl.obj",
+                "--nodelevel",
+                "7",
+                "--nodescale",
+                "1"
             ],
             "cwd": "${workspaceFolder}/HeroesCollisionTool",
             // For more information about the 'console' field, see https://github.com/OmniSharp/omnisharp-vscode/blob/master/debugger-launchjson.md#console-terminal-window

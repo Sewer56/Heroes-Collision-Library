@@ -1,109 +1,109 @@
+using System.Collections.Generic;
+using HeroesCollisionLibrary.Geometry.Structures;
+
 namespace HeroesCollisionLibrary
 {
     /// <summary>
     /// Defines the header of a Sonic Heroes Collision file, contains data on the overall structure of the file.
     /// </summary>
-    public class Collision_Header
+    public static class HeroesHeader
     {
-        /// <summary>
-        /// Constructor for the class.
-        /// </summary>
-        public Collision_Header() {}
-
         /// <summary>
         /// Defines the number of bytes stored by the collision file, the length of the file.
         /// </summary>
-        public uint numberOfBytes;
+        public static uint NumberOfBytes;
 
         /// <summary>
         /// Set the length of the header.
         /// </summary>
-        public const int HEADER_LENGTH = 0x28;
+        public const int HeaderLength = 0x28;
 
         /// <summary>
         /// Defines the offset at which the quadtree section starts in the file.
         /// </summary>
-        public uint quadtreeOffset;
+        public static uint QuadtreeOffset;
 
         /// <summary>
         /// Offset to the triangle section which defines all of the triangles and their vertices.
         /// </summary>
-        public uint triangleOffset;
+        public static uint TriangleOffset;
 
         /// <summary>
         /// Offset to the vertex section which defines all of the vertices stored in the file.
         /// </summary>
-        public uint vertexOffset;
+        public static uint VertexOffset;
 
         /// <summary>
         /// Defines the center position of the top level quadtree.
         /// </summary>
-        public Geometry_Properties.Vertex quadtreeCenter = new Geometry_Properties.Vertex(0,0,0);
+        public static Vertex QuadtreeCenter = new Vertex(0,0,0);
 
         /// <summary>
         /// Defines the size of the quadtree (a quadtree is a square), equal to the two most displaced vertices in any axis.
         /// </summary>
-        public float quadtreeSize;
+        public static float QuadtreeSize;
 
         /// <summary>
         /// The base Offset Power Level for the quadnode structure. It is unknown what this does.
         /// </summary>
-        public ushort basePower;
+        public static ushort BasePower;
 
         /// <summary>
         /// Defines the number of triangles used in the collision structure, the amount of entries in the triangle section.
         /// </summary>
-        public ushort numberOfTriangles;
+        public static ushort NumberOfTriangles;
 
         /// <summary>
         /// Defines the number of vertices used in the collision structure, the amount of entries in the vertex section.
         /// </summary>
-        public ushort numberOfVertices;
+        public static ushort NumberOfVertices;
 
         /// <summary>
         /// Defines the number of quadnodes used in the collision structure, the amount of entries in the quadnode section.
         /// </summary>
-        public ushort numberOfNodes;
+        public static ushort NumberOfNodes;
 
         /// <summary>
         /// Determines the overall size and center of the quadtree structure.
         /// </summary>
-        public void GetQuadtreeSizeCenter(Geometry_Properties.Vertex[] verticesArray)
+        /// <param name="vertices">The vertices of the collision file</param>
+        public static void GetQuadtreeSizeCenter(List<Vertex> vertices)
         {
             // Provide area of storage of the current maximum and minimum XYZ values.
-            Geometry_Properties.Vertex maximumXYZ = new Geometry_Properties.Vertex(0,0,0);
-            Geometry_Properties.Vertex minimumXYZ = new Geometry_Properties.Vertex(0,0,0);
+            Vertex maximumXyz = new Vertex(0,0,0);
+            Vertex minimumXyz = new Vertex(0,0,0);
 
             // Iterate over all of the vertices to find the maximum and/or minimum values for the vertices.
-            for (int x = 0; x < verticesArray.Length; x++)
+            for (int x = 0; x < vertices.Count; x++)
             {
-                if (verticesArray[x].X > maximumXYZ.X) { maximumXYZ.X = verticesArray[x].X; }
-                if (verticesArray[x].Y > maximumXYZ.Y) { maximumXYZ.Y = verticesArray[x].Y; }
-                if (verticesArray[x].Z > maximumXYZ.Z) { maximumXYZ.Z = verticesArray[x].Z; }
+                if (vertices[x].X > maximumXyz.X) { maximumXyz.X = vertices[x].X; }
+                if (vertices[x].Y > maximumXyz.Y) { maximumXyz.Y = vertices[x].Y; }
+                if (vertices[x].Z > maximumXyz.Z) { maximumXyz.Z = vertices[x].Z; }
 
-                if (verticesArray[x].X < minimumXYZ.X) { minimumXYZ.X = verticesArray[x].X; }
-                if (verticesArray[x].Y < minimumXYZ.Y) { minimumXYZ.Y = verticesArray[x].Y; }
-                if (verticesArray[x].Z < minimumXYZ.Z) { minimumXYZ.Z = verticesArray[x].Z; }
+                if (vertices[x].X < minimumXyz.X) { minimumXyz.X = vertices[x].X; }
+                if (vertices[x].Y < minimumXyz.Y) { minimumXyz.Y = vertices[x].Y; }
+                if (vertices[x].Z < minimumXyz.Z) { minimumXyz.Z = vertices[x].Z; }
             }
 
             // Calculate the center of the quadtree from the known minimum and maximum vertices.
-            quadtreeCenter.X = ((maximumXYZ.X + minimumXYZ.X) / 2.0F);
-            quadtreeCenter.Y = ((maximumXYZ.Y + minimumXYZ.Y) / 2.0F);
-            quadtreeCenter.Z = ((maximumXYZ.Z + minimumXYZ.Z) / 2.0F);
+            QuadtreeCenter.X = ((maximumXyz.X + minimumXyz.X) / 2.0F);
+            QuadtreeCenter.Y = ((maximumXyz.Y + minimumXyz.Y) / 2.0F);
+            QuadtreeCenter.Z = ((maximumXyz.Z + minimumXyz.Z) / 2.0F);
 
             // Obtain the size of the quadtree.
             // Check if there is a greater difference in the X axis min/max than Z axis.
-            if ((maximumXYZ.X - minimumXYZ.X) > (maximumXYZ.Z - minimumXYZ.Z))  
+            // If bottom line is uncommented, make quadtree size divisible by base power.
+            if ((maximumXyz.X - minimumXyz.X) > (maximumXyz.Z - minimumXyz.Z))  
             { 
                 // If true, X axis difference is the size.
-                quadtreeSize = maximumXYZ.X - minimumXYZ.X;  
-                //quadtreeSize = (int)(((int)(maximumXYZ.X - minimumXYZ.X) / basePower) * basePower);  
+                QuadtreeSize = maximumXyz.X - minimumXyz.X;
+                //QuadtreeSize = (int)(((int)(maximumXyz.X - minimumXyz.X) / BasePower) * BasePower);  
             }
             else 
             { 
                 // If false, Z axis difference is the size.
-                quadtreeSize = maximumXYZ.Z - minimumXYZ.Z;  
-                //quadtreeSize = (int)(((int)(maximumXYZ.Z - minimumXYZ.Z) / basePower) * basePower);  
+                QuadtreeSize = maximumXyz.Z - minimumXyz.Z;
+                //QuadtreeSize = (int)(((int)(maximumXyz.Z - minimumXyz.Z) / BasePower) * BasePower);  
             }
         }
     }

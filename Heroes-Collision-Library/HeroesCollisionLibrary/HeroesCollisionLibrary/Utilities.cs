@@ -1,5 +1,7 @@
 using System;
+using System.Diagnostics;
 using System.Linq;
+using System.Runtime.CompilerServices;
 using System.Text;
 
 namespace HeroesCollisionLibrary
@@ -9,19 +11,6 @@ namespace HeroesCollisionLibrary
     /// </summary>
     public static class Utilities
     {
-        /// <summary>
-        /// A generics based method which allows us to retrieve subarrays from arrays.
-        /// </summary>
-        /// <param name="index">The first element of the array.</param>
-        /// <param name="length">The amount of elements we want from the array.</param>
-        /// <returns>A subarray of the original array/</returns>
-        public static T[] SubArray<T>(this T[] data, int index, int length)
-        {
-            T[] result = new T[length];
-            Array.Copy(data, index, result, 0, length);
-            return result;
-        }
-
         /// <summary>
         /// Generates and prints an important warning message.
         /// </summary>
@@ -45,9 +34,34 @@ namespace HeroesCollisionLibrary
         }
 
         /// <summary>
+        /// Benchmarks an individual method call.
+        /// </summary>
+        public static void BenchmarkMethod(Action method, String actionText)
+        {
+            // Stopwatch to benchmark every action.
+            Stopwatch performanceWatch = new Stopwatch();
+
+            // Print out the action
+            Console.Write(actionText + " | ");
+
+            // Start the stopwatch.
+            performanceWatch.Start();
+
+            // Run the method.
+            method();
+
+            // Stop the stopwatch
+            performanceWatch.Stop();
+
+            // Print the results.
+            Console.WriteLine(performanceWatch.ElapsedMilliseconds + "ms");
+        }
+
+        /// <summary>
         /// Extension method for booleans, verifies whether all supplied booleans have equal value.
         /// </summary>
         /// <returns>True if all of the supplied boolean values are equivalent</returns>
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static bool AllEqual(this bool firstValue, params bool[] otherValues)
         {
             // Determine whether all elements satisfy a condition (equal in our case)

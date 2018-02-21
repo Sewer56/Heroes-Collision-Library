@@ -1,0 +1,89 @@
+struct HEADER 
+{
+    SetBackColor(0x808080);
+    uint    FileSize;
+    SetBackColor(0x8080ff);
+    uint    QuadTreeSectionOffset;
+    uint    TriangleSectionOffset;
+    uint    VertexSectionOffset;
+    SetBackColor(0x80ff80);
+    float   QuadTreeCenterX;
+    float   QuadTreeCenterY;
+    float   QuadTreeCenterZ;
+    float   QuadTreeLength;
+    SetBackColor(0x808000);
+    uint16  QuadtreeBasepower;
+    SetBackColor(0xff8080);
+    uint16  NumberOfTriangles;
+    uint16  NumberOfVertices;
+    uint16  NumberOfQuadTrees;
+    SetBackColor(0xffffff);
+} 
+
+// Declare/Exec struct.
+Header;
+
+local int FirstSectionLength = Header.QuadTreeSectionOffset - 0x28;
+local int FirstSectionEntries = FirstSectionLength / 2;
+
+SetBackColor(0x80ffff);
+struct TRIANGLEREFERENCESECTION
+{
+    uint16 TriangleIndex;
+} 
+QUADTREETRIANGLES[FirstSectionEntries];
+SetBackColor(0xffffff);
+
+SetBackColor(0x80ff80);
+struct NODESECTION
+{
+    uint16 NodeIndex;
+    uint16 NodeParent;
+    uint16 NodeChild;
+    uint16 RightNodeNeighbour;
+    uint16 LeftNodeNeighbour;
+    uint16 BottomNodeNeighbour;
+    uint16 TopNodeNeighbour;
+    uint16 NumberOfTriangles;
+    uint32 OffsetTriangleList;
+    uint16 PositioningOffsetValueLR;
+    uint16 PositioningOffsetValueTB;
+    byte  NodeDepthLevel;
+    byte  Null;
+    uint16 Null;
+    uint32 Null;
+} 
+NodeSection[Header.NumberOfQuadTrees];
+SetBackColor(0xffffff);
+SetBackColor(0x8080ff);
+struct TRIANGLESECTION
+{
+    uint16 VertexIndex1;
+    uint16 VertexIndex2;
+    uint16 VertexIndex3;
+    uint16 AdjacentTriangleIndex1;
+    uint16 AdjacentTriangleIndex2;
+    uint16 AdjacentTriangleIndex3;
+    float VertexNormalizedUnitVectorX;
+    float VertexNormalizedUnitVectorY;
+    float VertexNormalizedUnitVectorZ;
+
+    struct COLLISIONFLAGS
+    {
+        ubyte TriangleCollisionFlags;
+        ubyte ForwardMovementPushback;
+        ubyte VerticalMovementPushback;
+        ubyte SidewaysMovementPushback;
+    } CollisionFlagsPrimary, CollisionFlagsSecondary;
+} 
+TriangleSection[Header.NumberOfTriangles];
+
+SetBackColor(0xc0c0c0);
+struct VERTEXSECTION
+{
+    float XPosition;
+    float YPosition;
+    float ZPosition;
+} VertexSection[Header.NumberOfVertices];
+
+SetBackColor(0xffffff);

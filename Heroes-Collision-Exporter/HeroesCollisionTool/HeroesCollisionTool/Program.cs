@@ -14,12 +14,12 @@ namespace HeroesCollisionTool
         /// <summary>
         /// Creates an instance of the library for Collision Generation.
         /// </summary>
-        static CollisionGenerator collisionGenerator = new CollisionGenerator();
+        private static CollisionGenerator collisionGenerator;
 
         /// <summary>
         /// Creates an instance of the library for Collision Generation.
         /// </summary>
-        static CollisionExporter collisionExporter = new CollisionExporter();
+        private static CollisionExporter collisionExporter;
 
         /// <summary>
         /// The main entry point of the application.
@@ -27,28 +27,31 @@ namespace HeroesCollisionTool
         /// <param name="args"></param>
         static void Main(string[] args)
         {
+            // Instantiate Generator & Exporter
+            collisionExporter = new CollisionExporter();
+            collisionGenerator = new CollisionGenerator();
+
             // Check Arguments
             VerifyArguments(args);
 
             // Check if it is a CL or OBJ File for Exporting/Importing
-            if (collisionGenerator.collisionGeneratorProperties.filePath != null)
+            if (CollisionGenerator.Properties.FilePath != null)
             {
-                if (collisionGenerator.collisionGeneratorProperties.filePath.EndsWith(".cl")) { action = 2; }
-                else if (collisionGenerator.collisionGeneratorProperties.filePath.EndsWith(".obj")) { action = 1; }
+                if (CollisionGenerator.Properties.FilePath.EndsWith(".cl")) { action = 2; }
+                else if (CollisionGenerator.Properties.FilePath.EndsWith(".obj")) { action = 1; }
             }
 
             // Switch all of the available action states..
             switch (action)
             {
                 case 1:
-                    collisionGenerator.LoadOBJFile();
+                    collisionGenerator.LoadObjFile();
                     collisionGenerator.GenerateCollision();
                     collisionGenerator.WriteFile();
-                    collisionGenerator.PrintStatistics();
                     break;
                 case 2:
-                    collisionExporter.ReadColliison(collisionGenerator.collisionGeneratorProperties.filePath);
-                    collisionExporter.WriteCollision(collisionGenerator.collisionGeneratorProperties.filePath + ".obj");
+                    collisionExporter.ReadColliison(CollisionGenerator.Properties.FilePath);
+                    collisionExporter.WriteCollision(CollisionGenerator.Properties.FilePath + ".obj");
                     break;
                 default:
                     ShowHelp();
@@ -69,10 +72,11 @@ namespace HeroesCollisionTool
             Console.WriteLine("----------------------------");
             Console.WriteLine("Flags:");
             Console.WriteLine("--nodelevel <x>: Sets the depth level of the quadtree structure.");
-            Console.WriteLine("--nodescale <x>: Increases node size to increase # of triangles per node. (Default: 1.05)");
-            Console.WriteLine("--neighboursdisabled: Disables the neighbour finding algorithm.");
+            Console.WriteLine("--nodeoverlapregion <x>: Defines an overlap region in floating point units\n " +
+                              "                         where triangles in quadnodes overlap, default value 25.0\n" +
+                              "                         This is used to prevent cracks in floors.");
+            Console.WriteLine("--neighboursdisabled: Disables the neighbour finding algorithm for nodes that are not at the same depth.");
             Console.WriteLine("--adjacentsdisabled: Disables the adjacent triangle finding algorithm.");
-            Console.WriteLine("--useAABB: Uses a slightly faster but less optimal triangle-node intersection algorithm.");
             Console.ReadLine();
         }
 
@@ -83,13 +87,12 @@ namespace HeroesCollisionTool
         {
             for (int x = 0; x < args.Length; x++)
             {
-                if (args[x] == ("--file")) { collisionGenerator.collisionGeneratorProperties.filePath = args[x + 1]; }
-                else if (args[x] == ("--nodelevel")) { collisionGenerator.collisionGeneratorProperties.depthLevel = Convert.ToByte(args[x + 1]); }
-                else if (args[x] == ("--nodescale")) { collisionGenerator.collisionGeneratorProperties.nodeScale = Convert.ToSingle(args[x + 1]); }
-                else if (args[x] == ("--neighboursdisabled")) { collisionGenerator.collisionGeneratorProperties.neighboursEnabled = false; }
-                else if (args[x] == ("--adjacentsdisabled")) { collisionGenerator.collisionGeneratorProperties.adjacentsEnabled = false; }
-                else if (args[x] == ("--useAABB")) { collisionGenerator.collisionGeneratorProperties.useAABB = true; }
-                else if (args[x] == ("--basepower")) { collisionGenerator.collisionGeneratorProperties.basePower = Convert.ToByte(args[x + 1]); }
+                if (args[x] == ("--file")) { CollisionGenerator.Properties.FilePath = args[x + 1]; }
+                else if (args[x] == ("--nodelevel")) { CollisionGenerator.Properties.DepthLevel = Convert.ToByte(args[x + 1]); }
+                else if (args[x] == ("--nodeoverlapregion")) { CollisionGenerator.Properties.NodeOverlapRegion = Convert.ToSingle(args[x + 1]); }
+                else if (args[x] == ("--neighboursdisabled")) { CollisionGenerator.Properties.EnableNeighbours = false; }
+                else if (args[x] == ("--adjacentsdisabled")) { CollisionGenerator.Properties.EnableAdjacents = false; }
+                else if (args[x] == ("--basepower")) { CollisionGenerator.Properties.BasePower = Convert.ToByte(args[x + 1]); }
             }
         }
     }

@@ -6,11 +6,22 @@
     <Platforms>AnyCPU;x86</Platforms>
   </PropertyGroup>
 
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|AnyCPU'">
+    <LangVersion>7.2</LangVersion>
+    <Optimize>true</Optimize>
+    <Prefer32Bit>true</Prefer32Bit>
+    <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
+  </PropertyGroup>
+
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|AnyCPU'">
+    <LangVersion>7.2</LangVersion>
+  </PropertyGroup>
+
   <ItemGroup>
-    <Reference Include="HeroesCollisionLibrary" Condition = "'$(Configuration)'=='Release'">
+    <Reference Include="HeroesCollisionLibrary" Condition="'$(Configuration)'=='Release'">
       <HintPath>..\..\..\Heroes-Collision-Library\HeroesCollisionLibrary\HeroesCollisionLibrary\bin\Release\netstandard2.0\HeroesCollisionLibrary.dll</HintPath>
     </Reference>
-    <Reference Include="HeroesCollisionLibrary" Condition = "'$(Configuration)'=='Debug'">
+    <Reference Include="HeroesCollisionLibrary">
       <HintPath>..\..\..\Heroes-Collision-Library\HeroesCollisionLibrary\HeroesCollisionLibrary\bin\Debug\netstandard2.0\HeroesCollisionLibrary.dll</HintPath>
     </Reference>
   </ItemGroup>

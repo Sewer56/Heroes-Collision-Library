@@ -1,26 +1,46 @@
+using HeroesCollisionLibrary.Geometry.Structures;
 using System;
+using HeroesCollisionLibrary.Geometry;
 
 namespace HeroesCollisionLibrary
 {
     /// <summary>
     /// Defines various utility classes for performing mathematics on triangles.
     /// </summary>
-    public static class Triangle_Utilities
+    public static class TriangleUtilities
     {
+
+        /// <summary>
+        /// Calculates Normal Unit Vector of each given triangle.
+        /// </summary>
+        public static void CalculateTriangleNormals()
+        {
+            // Calculate all triangle normals.
+            for (int x = 0; x < GeometryData.Triangles.Count; x++)
+            {
+                // Grab the vertices from the vertices array onto the 
+                Vertex vertexOne = GeometryData.Vertices[GeometryData.Triangles[x].VertexOne];
+                Vertex vertexTwo = GeometryData.Vertices[GeometryData.Triangles[x].VertexTwo];
+                Vertex vertexThree = GeometryData.Vertices[GeometryData.Triangles[x].VertexThree];
+
+                GeometryData.Triangles[x].Normals = TriangleUtilities.CalculateNormal(vertexOne, vertexTwo, vertexThree);
+            }
+        }
+
         /// <summary>
         /// Calculates the normal unit vector perpendicular to the vertices of a triangle.
         /// </summary>
-        public static Geometry_Properties.Vertex CalculateNormal(Geometry_Properties.Vertex vertex1, Geometry_Properties.Vertex vertex2, Geometry_Properties.Vertex vertex3)
+        public static Vertex CalculateNormal(Vertex vertex1, Vertex vertex2, Vertex vertex3)
         {
             // Calculate the delta/difference in the XYZ coordinates of Vectors 2 - 1 and Vectors 3 - 1
-            Geometry_Properties.Vertex vertexOne = CalculateVectorDifference(vertex1, vertex2);
-            Geometry_Properties.Vertex vertexTwo = CalculateVectorDifference(vertex1, vertex3);
+            Vertex vertexOne = CalculateVectorDifference(vertex1, vertex2);
+            Vertex vertexTwo = CalculateVectorDifference(vertex1, vertex3);
 
             // Calculate Vertex Normal - Cross Product 
-            Geometry_Properties.Vertex vertexNormal = CalculateCrossProduct(vertexOne, vertexTwo);
+            Vertex vertexNormal = CalculateCrossProduct(vertexOne, vertexTwo);
 
             // Scale it to a unit vector to obtain Unit Normal.
-            Geometry_Properties.Vertex unitNormal = NormalizeVector(vertexNormal);
+            Vertex unitNormal = NormalizeVector(vertexNormal);
 
             // Returns the unit normal.
             return unitNormal;
@@ -29,19 +49,19 @@ namespace HeroesCollisionLibrary
         /// <summary>
         /// Returns true if the supplied vertex index is shared with another vertex in the passed in Triangle parameter.
         /// </summary>
-        public static bool HasSharedVertex(ushort index, Geometry_Properties.Triangle triangle)
+        public static bool HasSharedVertex(ushort index, HeroesTriangle triangle)
         {
-            if ( index == triangle.vertexOne || index == triangle.vertexTwo || index == triangle.vertexThree ) { return true; }
+            if ( index == triangle.VertexOne || index == triangle.VertexTwo || index == triangle.VertexThree ) { return true; }
             else { return false; }
         }
 
         /// <summary>
         /// Calculates the delta/difference in the XYZ coordinates of Vectors 2 & 1. 2 minus 1. 
         /// </summary>
-        private static Geometry_Properties.Vertex CalculateVectorDifference(Geometry_Properties.Vertex vertex1, Geometry_Properties.Vertex vertex2)
+        private static Vertex CalculateVectorDifference(Vertex vertex1, Vertex vertex2)
         {
             // Defines a unit vector normal to the three vertices.
-            Geometry_Properties.Vertex vectorAverage = new Geometry_Properties.Vertex();
+            Vertex vectorAverage = new Vertex();
 
             // Calculates the vector averages.
             vectorAverage.X = vertex2.X - vertex1.X;
@@ -55,15 +75,15 @@ namespace HeroesCollisionLibrary
         /// <summary>
         /// Calculates the Cross Product of two vectors, returning a normal vector to the two vectors. 
         /// </summary>
-        private static Geometry_Properties.Vertex CalculateCrossProduct(Geometry_Properties.Vertex vertex1, Geometry_Properties.Vertex vertex2)
+        private static Vertex CalculateCrossProduct(Vertex vertex1, Vertex vertex2)
         {
             // Defines a unit vector normal to the three vertices.
-            Geometry_Properties.Vertex crossProduct = new Geometry_Properties.Vertex();
+            Vertex crossProduct = new Vertex();
 
-            /// Example:
-            /// [ i, j, k ] - i,j,k componentsa
-            /// | 1, 2, 3 | - vertexOne
-            /// [ 4, 5, 6 ] - vertexTwo
+            // Example:
+            // [ i, j, k ] - i,j,k componentsa
+            // | 1, 2, 3 | - vertexOne
+            // [ 4, 5, 6 ] - vertexTwo
             
             crossProduct.X = (vertex1.Y * vertex2.Z) - (vertex1.Z * vertex2.Y);     //  [2(6) - 3(5)]i
             crossProduct.Y = -((vertex1.X * vertex2.Z) - (vertex1.Z * vertex2.X));  // -[1(6) - 3(4)]j
@@ -76,10 +96,10 @@ namespace HeroesCollisionLibrary
         /// <summary>
         /// Normalizes a vector, converting the vector into an equivalent vector of length 1.
         /// </summary>
-        private static Geometry_Properties.Vertex NormalizeVector(Geometry_Properties.Vertex vertex)
+        private static Vertex NormalizeVector(Vertex vertex)
         {
             // Defines a unit vector normal to the three vertices.
-            Geometry_Properties.Vertex unitVector = new Geometry_Properties.Vertex();
+            Vertex unitVector = new Vertex();
 
             // Calculates the vector magnitude.
             double vectorMagnitude = Math.Pow((vertex.X * vertex.X) + (vertex.Y * vertex.Y) + (vertex.Z * vertex.Z), 0.5F);

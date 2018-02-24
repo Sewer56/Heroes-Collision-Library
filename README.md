@@ -59,7 +59,7 @@ This part is optional and you can specify your own vertex and/or triangle list.
 collisionGenerator.LoadObjFile();
 ```
 
-## Supplying own Triangle List
+## Supplying own Geometry (Bypassing OBJ Parser)
 
 Useful for specifying own collision flags and/or importing geometry manually in your own program from other formats.
 
@@ -70,6 +70,8 @@ Useful for specifying own collision flags and/or importing geometry manually in 
 // (The exporter will auto calculate override normals, adjacents during generation)
 GeometryData.Vertices = <Your Vertex List>
 GeometryData.Triangles = <Your Triangle List> 
+
+// You can now generate the collision file with GenerateCollision().
 ```
 
 ## Generating file and writing to Disk
